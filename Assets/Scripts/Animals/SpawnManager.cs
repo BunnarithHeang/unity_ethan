@@ -7,6 +7,7 @@ public class SpawnManager : MonoBehaviour
     public GameObject[] animalPrefabs;
     public Transform[] SpawnPoints;
     private float spawnTime = 10.0f;
+    private float radius = 1.0f;
     List<GameObject> limitedAnimals = new List<GameObject>();
 
     // Start is called before the first frame update
@@ -20,7 +21,7 @@ public class SpawnManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (limitedAnimals.Count > 10)
+        if (limitedAnimals.Count > 8)
             CancelInvoke();
 
     }
@@ -28,10 +29,19 @@ public class SpawnManager : MonoBehaviour
     void SpawnAnimals()
     {
         int animalIndex = Random.Range(0, animalPrefabs.Length);
-        int spawnIndex = Random.Range(0, SpawnPoints.Length);
-        Vector3 spawnPos = SpawnPoints[spawnIndex].position;
 
-        Instantiate(animalPrefabs[animalIndex], spawnPos, SpawnPoints[spawnIndex].rotation);
+        if (animalIndex == 0)
+        {
+            Vector3 spawnPos = SpawnPoints[0].position + (Vector3)Random.insideUnitCircle * radius;
+           
+            Instantiate(animalPrefabs[animalIndex], spawnPos, SpawnPoints[0].rotation);
+        }
+        else if (animalIndex == 1)
+        { 
+            Vector3 spawnPos = SpawnPoints[1].position + (Vector3)Random.insideUnitCircle * radius;
+            Instantiate(animalPrefabs[animalIndex], spawnPos, SpawnPoints[1].rotation);
+        }
+
         limitedAnimals.Add(animalPrefabs[animalIndex]);
 
     }
