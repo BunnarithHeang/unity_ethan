@@ -14,9 +14,13 @@ public class PreyAnimalController : MonoBehaviour
     private Animator anim;
 
     public HealthBar healthbar;
+    // denotes the schedule running animation
+    private bool isAnimating = false;
+    // prevents starting multiple identicle coroutine
+    private bool hasRandomCoroutineStarted = false;
+    // denotes the the animal had just ran after come close to the player
+    private bool justRan = false;
 
-    private Vector3 lastestDirectionPosition = Vector3.zero;
-    private bool isStopping = false;
 
     private void Start()
     {
@@ -24,59 +28,82 @@ public class PreyAnimalController : MonoBehaviour
         anim = GetComponent<Animator>();
         currentHealth = MaxHealth;
         healthbar.SetMaxHealth(MaxHealth);
-
-
     }
 
 
     private void Update()
     {
         float distance = Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, transform.position);
-        float walkingTime = Random.Range(0, 1000);
 
-        if (distance <= lookRadius)
+        bool isNearPlayer = distance <= lookRadius;
+
+        float walkingTime = Random.Range(0, 500);
+
+        if (isNearPlayer)
         {
+            // if currently animating and player enters the zone
+            if (isAnimating)
+            {
+                CancelRandomRunning();
+            }
+
             // Move towards the player
-            Running();
+            StartRunning();
+            justRan = true;
+        }
+        else if (!hasRandomCoroutineStarted && walkingTime == 0 && !isAnimating && !justRan)
+        {
+            // if hasn't start the coroutine
+            StartCoroutine("StartRandomRunning");
+        } else if (isAnimating && !justRan)
+        {
+            // if currently animating and not triggering by the radius zone
             anim.SetTrigger("isRunning");
         }
-        //else if (lastestDirectionPosition != Vector3.zero && !isStopping)
-        //{
-        //    isStopping = true;
-        //    float dur = durationFromVector3(lastestDirectionPosition);
-        //    StartCoroutine("StopAnimateAtDuration", dur);
-        //}
-        //else if (!isStopping)
-        //{
-        //    agent.SetDestination(transform.position);
-        //}  else
+        else if (justRan)
         {
-            lastestDirectionPosition = RandomNavSphere(transform.position, radius, -1);
+            // justRan means the player enters the zone
+            justRan = false;
+            agent.SetDestination(transform.position);
         }
+        
     }
 
-    //private float durationFromVector3(Vector3 positon)
-    //{
-    //    return Vector3.Distance(transform.position, positon) / agent.speed;
-    //}
+    private void CancelRandomRunning() {
+        isAnimating = false;
+        hasRandomCoroutineStarted = false;
 
-    private IEnumerator setRunningTime(float waitingTime)
+        StopCoroutine("StartRandomRunning");
+    }
+
+    private IEnumerator StartRandomRunning()
     {
-        yield return new WaitForSeconds(waitingTime);
+        hasRandomCoroutineStarted = true;
+        yield return new WaitForSeconds(1.5f);
+        isAnimating = true;
 
-        agent.SetDestination(transform.position);
+        StartRunning();
 
-        isStopping = false;
-        lastestDirectionPosition = Vector3.zero;
+        // Duration to wait for + buffer
+        float dur = DurationFrom(agent.destination);
+        
+        yield return new WaitForSeconds(dur + 0.35f);
+        
+        isAnimating = false;
+        hasRandomCoroutineStarted = false;
     }
 
-    private void Running()
+    private float DurationFrom(Vector3 positon)
+    {
+        return Vector3.Distance(transform.position, positon) / agent.speed;
+    }
+
+    private void StartRunning()
     {
         Vector3 newPosition = RandomNavSphere(transform.position, radius, -1);
-        var forward = transform.TransformDirection(Vector3.forward);
         agent.SetDestination(newPosition);
-
-        lastestDirectionPosition = newPosition;
+        
+        anim.SetTrigger("isRunning");
     }
 
     void TakeDamage(int demage)
