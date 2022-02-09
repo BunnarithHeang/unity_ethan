@@ -1636,6 +1636,7 @@ GameObject:
   - component: {fileID: 5216283315167250401}
   - component: {fileID: 5216283315167250402}
   - component: {fileID: 4825965644597623755}
+  - component: {fileID: 416513053}
   m_Layer: 0
   m_Name: Leopard
   m_TagString: Animal
@@ -1725,6 +1726,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &416513053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3906789647487934025}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 859cbc3be307e4341b138847e3b0744b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthbar: {fileID: 0}
 --- !u!1 &3906849431129080859
 GameObject:
   m_ObjectHideFlags: 0
