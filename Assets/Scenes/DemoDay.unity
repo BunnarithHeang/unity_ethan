@@ -3411,6 +3411,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 149063459, guid: c833b04c1900c4ada9f15a39a30948a1, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 4416926082626433564}
     - target: {fileID: 3906789647487934025, guid: c833b04c1900c4ada9f15a39a30948a1, type: 3}
       propertyPath: m_Name
       value: Leopard
@@ -3425,7 +3429,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3908298202681950563, guid: c833b04c1900c4ada9f15a39a30948a1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 3908298202681950563, guid: c833b04c1900c4ada9f15a39a30948a1, type: 3}
       propertyPath: m_LocalPosition.z
