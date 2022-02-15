@@ -3,7 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - CinemachineTarget
+  - Water
+  - StartGameButton
+  - QuitGameButton
+  - GameManager
+  - Animal
+  - InventoryItemParents
+  - InventoryItemSlot
+  - InventoryItemSlotIcon
   layers:
   - Default
   - TransparentFX
