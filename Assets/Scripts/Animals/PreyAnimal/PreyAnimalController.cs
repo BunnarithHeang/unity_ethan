@@ -14,7 +14,7 @@ public class PreyAnimalController : MonoBehaviour
     private NavMeshAgent agent;
     private Animator anim;
     //create HealthBarz object
-    public HealthBar healthbar;
+    public HealthBarSpaceWorld healthbar;
 
 
     private void Start()
@@ -31,6 +31,7 @@ public class PreyAnimalController : MonoBehaviour
         float distance = Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, transform.position);
 
         bool isNearPlayer = distance <= lookRadius;
+        float limitedTime = Random.Range(5, 10);
 
 
         timer += Time.deltaTime;
@@ -50,7 +51,7 @@ public class PreyAnimalController : MonoBehaviour
 
         }
 
-        else if(timer > 10.0f)
+        else if(timer > limitedTime)
         {
             StartRunning();
 

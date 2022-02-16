@@ -14,6 +14,11 @@ namespace StarterAssets
 #endif
 	public class ThirdPersonController : MonoBehaviour
 	{
+
+		private int MaxHealth = 100;
+		private int currentHealth;
+		public HealthBar healthBar;
+
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
 		public float MoveSpeed = 2.0f;
@@ -91,9 +96,16 @@ namespace StarterAssets
 
 		private bool _hasAnimator;
 
+		
+		// Start is called before the first frame update
+
+
+		
+
 		private void Awake()
 		{
 			// get a reference to our main camera
+			
 			if (_mainCamera == null)
 			{
 				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -102,6 +114,9 @@ namespace StarterAssets
 
 		private void Start()
 		{
+			currentHealth = MaxHealth;
+			healthBar.SetMaxHealth(MaxHealth);
+
 			_hasAnimator = TryGetComponent(out _animator);
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
@@ -225,6 +240,22 @@ namespace StarterAssets
 				_animator.SetFloat(_animIDSpeed, _animationBlend);
 				_animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
 			}
+		}
+
+		void TakeDamage(int demage)
+		{
+			currentHealth -= demage;
+			healthBar.SetHealth(currentHealth);
+		}
+
+
+		private void OnTriggerEnter(Collider other)
+		{
+			if (other.gameObject.tag == "Enemy")
+			{
+				TakeDamage(5);
+			}
+
 		}
 
 		private void JumpAndGravity()
