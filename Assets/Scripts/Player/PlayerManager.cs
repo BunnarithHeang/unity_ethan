@@ -8,44 +8,22 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
 
-    private GameObject startButton;
-    private GameObject quitButton;
     private Inventory inventory;
     [SerializeField] private GameObject inventoryParent;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        startButton = GameObject.FindGameObjectWithTag("StartGameButton");
-        quitButton = GameObject.FindGameObjectWithTag("QuitGameButton");
-    }
+    [SerializeField] private ItemSpawnManager itemSpawnManager;
 
     private void Awake()
     {
-        List<GameObject> objects = FindGameObjectInChildWithTag(inventoryParent, "InventoryItemSlot");
+        List<GameObject> objects = FindGameObjectInChildWithTag(
+            inventoryParent,
+            "InventoryItemSlot");
 
         inventory = new Inventory(objects);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-    }
-
-    public void SetClick()
-    {
-        startButton.SetActive(true);
-        quitButton.SetActive(true);
-    }
-
-    public void StartGame()
-    {
-        SceneManager.LoadScene("GamePlay");
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
+        
     }
 
     public static List<GameObject> FindGameObjectInChildWithTag(GameObject parent, string tag)
@@ -62,5 +40,15 @@ public class PlayerManager : MonoBehaviour
         }
 
         return objects;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // Filters for only inventory items
+        if (InventoryItem.IsInventoryItem(other.tag))
+        {
+            inventory.AddItemBy(other.tag);
+            Destroy(other.gameObject);
+        }
     }
 }

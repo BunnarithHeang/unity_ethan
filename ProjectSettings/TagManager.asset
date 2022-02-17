@@ -13,6 +13,8 @@ TagManager:
   - InventoryItemParents
   - InventoryItemSlot
   - InventoryItemSlotIcon
+  - ItemPotionHealth
+  - ItemSword
   layers:
   - Default
   - TransparentFX
