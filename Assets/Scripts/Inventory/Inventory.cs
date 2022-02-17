@@ -7,15 +7,13 @@ using UnityEngine.UI;
 [Serializable]
 public class Inventory : MonoBehaviour
 {
-    private Action<InventoryItem> useItemAction;
-
     public List<InventoryItem> items { get; private set; }
 
     public List<GameObject> itemObjects { get; private set; }
 
-    private string selectedColorCode = "0EFF00";
-    private string unselectedColorCode = "FFFFFF";
-    private int collectingIndex;
+    private Color selectedColorCode = new Color(14, 255, 0, 255);
+    private Color unselectedColorCode = new Color(255, 255, 255, 255);
+    private int selectedIndex = 0;
 
     public Inventory(List<GameObject> objects)
     {
@@ -69,7 +67,8 @@ public class Inventory : MonoBehaviour
 
             // Amount child
             GameObject amountTextUI = itemButton.transform.GetChild(1).gameObject;
-            amountTextUI.SetActive(false);
+            amountTextUI.GetComponent<TextMeshProUGUI>().SetText(newItem.amount.ToString());
+            amountTextUI.SetActive(true);
 
             // Get the image component, set to new sprite
             Image imageComponent = imageUI.GetComponent("Image") as Image;
@@ -78,43 +77,51 @@ public class Inventory : MonoBehaviour
             // Set active
             inventorySlot.SetActive(true);
         }
+
+        SetNewFocusUI();
     }
 
-    public void RemoveItem()
+    public void setNewFocusIndex()
+    {
+        selectedIndex++;
+
+        int cnt = 0;
+        for (int i = 0; i < itemObjects.Count; ++i) {
+            if (itemObjects[i].activeSelf)
+                cnt += 1;
+        }
+
+        selectedIndex %= cnt;
+
+        SetNewFocusUI();
+    }
+
+    private void SetNewFocusUI()
+    {
+        for (int i = 0; i < itemObjects.Count; ++i)
+        {
+            SetTextToUnselected(
+                i,
+                itemObjects[i].activeSelf && i == selectedIndex);
+        }
+    }
+
+    private void SetTextToUnselected(int index, bool active)
+    {
+        GameObject itemButton = itemObjects[index].transform.GetChild(0).gameObject;
+        GameObject amountTextUI = itemButton.transform.GetChild(1).gameObject;
+
+        amountTextUI.GetComponent<TextMeshProUGUI>().color = active ? selectedColorCode : unselectedColorCode;
+        amountTextUI.SetActive(true);
+    }
+
+    public void UseItem()
+    {
+        
+    }
+
+    public void DropItem()
     {
         // When remove check the reorder in list make sure that all are in the correct order
-
-        //if (item.IsStackable())
-        //{
-        //    InventoryItem itemInInventory = null;
-        //    foreach (InventoryItem inventoryItem in items)
-        //    {
-        //        if (inventoryItem.type == item.type)
-        //        {
-        //            inventoryItem.amount -= item.amount;
-        //            itemInInventory = inventoryItem;
-        //        }
-        //    }
-        //    if (itemInInventory != null && itemInInventory.amount <= 0)
-        //    {
-        //        items.Remove(itemInInventory);
-        //    }
-        //}
-        //else
-        //{
-        //    items.Remove(item);
-        //}
-        //OnItemListChanged?.Invoke(this, EventArgs.Empty);
     }
-
-    public void UseItem(InventoryItem item)
-    {
-        useItemAction(item);
-    }
-
-    public List<InventoryItem> GetItemList()
-    {
-        return items;
-    }
-
 }

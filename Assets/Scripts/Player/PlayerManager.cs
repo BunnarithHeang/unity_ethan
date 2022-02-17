@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-
     private Inventory inventory;
     [SerializeField] private GameObject inventoryParent;
     [SerializeField] private ItemSpawnManager itemSpawnManager;
@@ -19,11 +18,6 @@ public class PlayerManager : MonoBehaviour
             "InventoryItemSlot");
 
         inventory = new Inventory(objects);
-    }
-
-    private void Update()
-    {
-        
     }
 
     public static List<GameObject> FindGameObjectInChildWithTag(GameObject parent, string tag)
@@ -50,5 +44,10 @@ public class PlayerManager : MonoBehaviour
             inventory.AddItemBy(other.tag);
             Destroy(other.gameObject);
         }
+    }
+
+    public void SetNewFocusIndex()
+    {
+        inventory.setNewFocusIndex();
     }
 }

@@ -120,6 +120,8 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+
+			ScrollInventory();
 		}
 
 		private void LateUpdate()
@@ -314,5 +316,21 @@ namespace StarterAssets
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
-    }
+
+		private void ScrollInventory()
+        {
+			if (_input.scroll)
+            {
+				PlayerManager player = GetComponent<PlayerManager>();
+				
+				if (player != null)
+                {
+					player.SetNewFocusIndex();
+                }
+			}
+
+			_input.scroll = false;
+		}
+
+	}
 }
