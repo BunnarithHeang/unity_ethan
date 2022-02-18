@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
+
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -18,6 +19,7 @@ namespace StarterAssets
 		private int MaxHealth = 100;
 		private int currentHealth;
 		public HealthBar healthBar;
+		
 
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
@@ -84,6 +86,7 @@ namespace StarterAssets
 		private int _animIDSpeed;
 		private int _animIDGrounded;
 		private int _animIDJump;
+		private int _animDead;
 		private int _animIDFreeFall;
 		private int _animIDMotionSpeed;
 
@@ -146,6 +149,7 @@ namespace StarterAssets
 		{
 			_animIDSpeed = Animator.StringToHash("Speed");
 			_animIDGrounded = Animator.StringToHash("Grounded");
+			_animDead = Animator.StringToHash("Die");
 			_animIDJump = Animator.StringToHash("Jump");
 			_animIDFreeFall = Animator.StringToHash("FreeFall");
 			_animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
@@ -253,7 +257,12 @@ namespace StarterAssets
 		{
 			if (other.gameObject.tag == "Enemy")
 			{
-				TakeDamage(5);
+				TakeDamage(50);
+			}
+			if (currentHealth <= 0)
+            {
+				_animator.SetBool(_animDead, true);
+
 			}
 
 		}
