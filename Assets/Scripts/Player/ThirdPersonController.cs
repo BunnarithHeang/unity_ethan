@@ -96,12 +96,6 @@ namespace StarterAssets
 
 		private bool _hasAnimator;
 
-		
-		// Start is called before the first frame update
-
-
-		
-
 		private void Awake()
 		{
 			// get a reference to our main camera
@@ -255,7 +249,6 @@ namespace StarterAssets
 			{
 				TakeDamage(5);
 			}
-
 		}
 
 		private void JumpAndGravity()

@@ -15,6 +15,7 @@ public class PreyAnimalController : MonoBehaviour
     private Animator anim;
     //create HealthBarz object
     public HealthBarSpaceWorld healthbar;
+    [SerializeField] private SpawnManager spawnManager;
 
 
     private void Start()
