@@ -17898,6 +17898,8 @@ MonoBehaviour:
   jump: 0
   sprint: 0
   scroll: 0
+  use: 0
+  drop: 0
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
@@ -19288,7 +19290,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryParent: {fileID: 878141257}
   itemSpawnManager: {fileID: 1778751092}
-  healthBar: {fileID: 0}
+  healthBar: {fileID: 117143102}
 --- !u!114 &4416926082626433566
 MonoBehaviour:
   m_ObjectHideFlags: 0

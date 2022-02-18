@@ -120,24 +120,47 @@ public class Inventory : MonoBehaviour
 
     public void UseItem()
     {
-        OnUseItem(items[selectedIndex].type, EventArgs.Empty);
-        
-        //switch (item.type)
-        //{
-        //    case InventoryItem.ItemType.Health:
-        //    case InventoryItem.ItemType.Meat1:
-        //    case InventoryItem.ItemType.Meat2:
-        //    case InventoryItem.ItemType.Sword:
-        //        OnUseItem(item.type, EventArgs.Empty);
-        //        break;
-        //    default:
-        //        break;
-        //}
+        if (items.Count > 0)
+        {
+            OnUseItem(items[selectedIndex], EventArgs.Empty);
+
+            items[selectedIndex].ModifyAmount(-1);
+
+            if (items[selectedIndex].amount <= 0) {
+                items.RemoveAt(selectedIndex);
+                itemObjects[selectedIndex].SetActive(false);
+            }
+        }
     }
 
     public void DropItem()
     {
-        OnDropItem(items[selectedIndex].type, EventArgs.Empty); 
-        // When remove check the reorder in list make sure that all are in the correct order
+        if (items.Count > 0)
+        {
+            OnDropItem(items[selectedIndex], EventArgs.Empty);
+
+            if (items[selectedIndex].IsStackable())
+            {
+                items[selectedIndex].ModifyAmount(-1);
+
+                if (items[selectedIndex].amount <= 0)
+                {
+                    items.RemoveAt(selectedIndex);
+                    itemObjects[selectedIndex].SetActive(false);
+                }
+            }
+            else
+            {
+                Debug.Log(selectedIndex);
+                Debug.Log(items.Count);
+                //items.RemoveAt(selectedIndex);
+                //if (selectedIndex > 0)
+                //{
+                //    selectedIndex--;
+                //    SetNewFocusUI();
+                //}
+            }
+            // When remove check the reorder in list make sure that all are in the correct order
+        }
     }
 }

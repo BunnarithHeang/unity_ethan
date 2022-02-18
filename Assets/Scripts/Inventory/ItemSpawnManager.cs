@@ -65,8 +65,6 @@ public class ItemSpawnManager : MonoBehaviour
         int posIndex = Random.Range(0, spawnPoints.Count);
         int itemIndex = Random.Range(0, healthPrefabs.Count);
 
-        Debug.Log(spawnPoints[posIndex].position);
-
         Vector3 spawnPos = spawnPoints[posIndex].position + (Vector3)Random.insideUnitCircle * radius;
         Instantiate(healthPrefabs[itemIndex], spawnPos, spawnPoints[0].rotation);
     }
