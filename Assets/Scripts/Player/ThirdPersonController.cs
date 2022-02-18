@@ -149,7 +149,7 @@ namespace StarterAssets
 		{
 			_animIDSpeed = Animator.StringToHash("Speed");
 			_animIDGrounded = Animator.StringToHash("Grounded");
-			_animDead = Animator.StringToHash("Die");
+			_animDead = Animator.StringToHash("Dead");
 			_animIDJump = Animator.StringToHash("Jump");
 			_animIDFreeFall = Animator.StringToHash("FreeFall");
 			_animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
@@ -164,6 +164,9 @@ namespace StarterAssets
 			// update animator if using character
 			if (_hasAnimator)
 			{
+				_animator.SetBool(_animIDGrounded, Grounded);
+			}else
+            {
 				_animator.SetBool(_animIDGrounded, Grounded);
 			}
 		}
@@ -316,13 +319,14 @@ namespace StarterAssets
 				{
 					_fallTimeoutDelta -= Time.deltaTime;
 				}
+			
 				else
 				{
 					// update animator if using character
-					if (_hasAnimator)
-					{
-						_animator.SetBool(_animIDFreeFall, true);
-					}
+					//if (_hasAnimator)
+					//{
+					//	_animator.SetBool(_animIDFreeFall, true);
+					//}
 				}
 
 				// if we are not grounded, do not jump

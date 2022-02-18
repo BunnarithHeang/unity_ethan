@@ -11,6 +11,7 @@ public class InventoryItem
 
     private static Dictionary<string, ItemType> itemsTypes = new Dictionary<string, ItemType>() {
         { "ItemPotionHealth", ItemType.Health },
+        {"ItemMeat" , ItemType.Meat1},
         { "ItemSword", ItemType.Sword },
     };
 

@@ -13,6 +13,7 @@ public class PreyAnimalController : MonoBehaviour
 
     private NavMeshAgent agent;
     private Animator anim;
+    public GameObject meatPrefab;
     //create HealthBarz object
     public HealthBarSpaceWorld healthbar;
 
@@ -35,30 +36,33 @@ public class PreyAnimalController : MonoBehaviour
 
 
         timer += Time.deltaTime;
-
-        if (isNearPlayer)
+        if (currentHealth > 0)
         {
+            if (isNearPlayer)
+            {
 
-            // Move towards the player
-            StartRunning();
-            //cancle timer to 0
-            timer = 0.0f;
-        }
-        else if (timer > 13.0f)
-        {
-            timer = 0;
-            agent.SetDestination(transform.position);
+                // Move towards the player
+                StartRunning();
+                //cancle timer to 0
+                timer = 0.0f;
+            }
+            else if (timer > 13.0f)
+            {
+                timer = 0;
+                agent.SetDestination(transform.position);
 
-        }
+            }
 
-        else if(timer > limitedTime)
-        {
-            StartRunning();
+            else if (timer > limitedTime)
+            {
+                StartRunning();
 
-        } else
-        {
+            }
+            else
+            {
 
-            agent.SetDestination(transform.position);
+                agent.SetDestination(transform.position);
+            }
         }
     }
 
@@ -97,7 +101,19 @@ public class PreyAnimalController : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Destroy(gameObject);
+            agent.SetDestination(transform.position);
+            anim.SetTrigger("isDeath");
+
+            StartCoroutine("SpawnItem");
         }
+        
+    }
+    private IEnumerator SpawnItem()
+    {
+        yield return new WaitForSeconds(3);
+        Destroy(gameObject);
+        
+
+        Instantiate(meatPrefab, gameObject.transform.position, Quaternion.identity);
     }
 }
