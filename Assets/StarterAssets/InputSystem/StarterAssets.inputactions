@@ -36,14 +36,6 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
-                },
-                {
-                    "name": "Scroll",
-                    "type": "Button",
-                    "id": "d5c26aa6-0e27-42a1-b1ef-fdc8f25d8218",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -220,17 +212,6 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Sprint",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b2079d13-8a1d-413a-9c37-3dfbc7caa309",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardMouse",
-                    "action": "Scroll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

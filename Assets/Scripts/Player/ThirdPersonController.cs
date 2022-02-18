@@ -14,6 +14,11 @@ namespace StarterAssets
 #endif
 	public class ThirdPersonController : MonoBehaviour
 	{
+
+		private int MaxHealth = 100;
+		private int currentHealth;
+		public HealthBar healthBar;
+
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
 		public float MoveSpeed = 2.0f;
@@ -91,9 +96,16 @@ namespace StarterAssets
 
 		private bool _hasAnimator;
 
+		
+		// Start is called before the first frame update
+
+
+		
+
 		private void Awake()
 		{
 			// get a reference to our main camera
+			
 			if (_mainCamera == null)
 			{
 				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -102,6 +114,9 @@ namespace StarterAssets
 
 		private void Start()
 		{
+			currentHealth = MaxHealth;
+			healthBar.SetMaxHealth(MaxHealth);
+
 			_hasAnimator = TryGetComponent(out _animator);
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
@@ -120,8 +135,6 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
-
-			ScrollInventory();
 		}
 
 		private void LateUpdate()
@@ -229,6 +242,22 @@ namespace StarterAssets
 			}
 		}
 
+		void TakeDamage(int demage)
+		{
+			currentHealth -= demage;
+			healthBar.SetHealth(currentHealth);
+		}
+
+
+		private void OnTriggerEnter(Collider other)
+		{
+			if (other.gameObject.tag == "Enemy")
+			{
+				TakeDamage(5);
+			}
+
+		}
+
 		private void JumpAndGravity()
 		{
 			if (Grounded)
@@ -316,21 +345,5 @@ namespace StarterAssets
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
-
-		private void ScrollInventory()
-        {
-			if (_input.scroll)
-            {
-				PlayerManager player = GetComponent<PlayerManager>();
-				
-				if (player != null)
-                {
-					player.SetNewFocusIndex();
-                }
-			}
-
-			_input.scroll = false;
-		}
-
 	}
 }

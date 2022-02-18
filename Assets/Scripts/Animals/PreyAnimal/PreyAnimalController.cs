@@ -9,17 +9,12 @@ public class PreyAnimalController : MonoBehaviour
     private float lookRadius = 3.0f;
     private int MaxHealth = 20;
     private int currentHealth;
+    float timer = 0;
 
     private NavMeshAgent agent;
     private Animator anim;
-
-    public HealthBar healthbar;
-    // denotes the schedule running animation
-    private bool isAnimating = false;
-    // prevents starting multiple identicle coroutine
-    private bool hasRandomCoroutineStarted = false;
-    // denotes the the animal had just ran after come close to the player
-    private bool justRan = false;
+    //create HealthBarz object
+    public HealthBarSpaceWorld healthbar;
 
 
     private void Start()
@@ -36,93 +31,45 @@ public class PreyAnimalController : MonoBehaviour
         float distance = Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, transform.position);
 
         bool isNearPlayer = distance <= lookRadius;
+        float limitedTime = Random.Range(5, 10);
 
-        float walkingTime = Random.Range(0, 500);
+
+        timer += Time.deltaTime;
 
         if (isNearPlayer)
         {
-            // if currently animating and player enters the zone
-            if (isAnimating)
-            {
-                CancelRandomRunning();
-            }
 
             // Move towards the player
             StartRunning();
-            justRan = true;
+            //cancle timer to 0
+            timer = 0.0f;
         }
-        else if (!hasRandomCoroutineStarted && walkingTime == 0 && !isAnimating && !justRan)
+        else if (timer > 13.0f)
         {
-            // if hasn't start the coroutine
-            StartCoroutine("StartRandomRunning");
-        } else if (isAnimating && !justRan)
-        {
-            // if currently animating and not triggering by the radius zone
-            anim.SetTrigger("isRunning");
+            timer = 0;
+            agent.SetDestination(transform.position);
+
         }
-        else if (justRan)
+
+        else if(timer > limitedTime)
         {
-            // justRan means the player enters the zone
-            justRan = false;
+            StartRunning();
+
+        } else
+        {
+
             agent.SetDestination(transform.position);
         }
-        
-    }
-
-    private void CancelRandomRunning() {
-        isAnimating = false;
-        hasRandomCoroutineStarted = false;
-
-        StopCoroutine("StartRandomRunning");
-    }
-
-    private IEnumerator StartRandomRunning()
-    {
-        hasRandomCoroutineStarted = true;
-        yield return new WaitForSeconds(1.5f);
-        isAnimating = true;
-
-        StartRunning();
-
-        // Duration to wait for + buffer
-        float dur = DurationFrom(agent.destination);
-        
-        yield return new WaitForSeconds(dur + 0.35f);
-        
-        isAnimating = false;
-        hasRandomCoroutineStarted = false;
-    }
-
-    private float DurationFrom(Vector3 positon)
-    {
-        return Vector3.Distance(transform.position, positon) / agent.speed;
     }
 
     private void StartRunning()
     {
+        
         Vector3 newPosition = RandomNavSphere(transform.position, radius, -1);
         agent.SetDestination(newPosition);
-        
+
         anim.SetTrigger("isRunning");
     }
-
-    void TakeDamage(int demage)
-    {
-        currentHealth -= demage;
-        healthbar.SetHealth(currentHealth);
-    }
-
-
-    private void OnTriggerEnter(Collider other)
-    {
-        TakeDamage(5);
-      
-        if(currentHealth <= 0)
-        {
-            Destroy(gameObject);
-        }
-    }
-
 
 
     public Vector3 RandomNavSphere(Vector3 origin, float distance, int layerMask)
@@ -135,5 +82,22 @@ public class PreyAnimalController : MonoBehaviour
         NavMesh.SamplePosition(randomDirection, out navHit, distance, layerMask);
 
         return navHit.position;
+    }
+
+    void TakeDamage(int demage)
+    {
+        currentHealth -= demage;
+        healthbar.SetHealth(currentHealth);
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        TakeDamage(5);
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }
