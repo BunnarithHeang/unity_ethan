@@ -15,6 +15,9 @@ TagManager:
   - InventoryItemSlotIcon
   - ItemPotionHealth
   - ItemSword
+  - Enemy
+  - WayPoints
+  - ItemCheckPoint
   layers:
   - Default
   - TransparentFX

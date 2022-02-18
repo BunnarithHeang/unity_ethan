@@ -13,16 +13,14 @@ public class SpawnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         InvokeRepeating("SpawnAnimals", spawnTime, spawnTime);
-
     }
 
     // Update is called once per frame
     void Update()
     {
         if (limitedAnimals.Count > 8)
-            CancelInvoke();
+            CancelInvoke("SpawnAnimals");
 
     }
 
@@ -43,6 +41,5 @@ public class SpawnManager : MonoBehaviour
         }
 
         limitedAnimals.Add(animalPrefabs[animalIndex]);
-
     }
 }

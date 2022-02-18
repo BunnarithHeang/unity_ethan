@@ -99,12 +99,6 @@ namespace StarterAssets
 
 		private bool _hasAnimator;
 
-		
-		// Start is called before the first frame update
-
-
-		
-
 		private void Awake()
 		{
 			// get a reference to our main camera
@@ -134,10 +128,12 @@ namespace StarterAssets
 		private void Update()
 		{
 			_hasAnimator = TryGetComponent(out _animator);
-			
+
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+
+			ScrollInventory();
 		}
 
 		private void LateUpdate()
@@ -267,7 +263,6 @@ namespace StarterAssets
 				_animator.SetBool(_animDead, true);
 
 			}
-
 		}
 
 		private void JumpAndGravity()
@@ -357,6 +352,21 @@ namespace StarterAssets
 			
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
+		}
+
+		private void ScrollInventory()
+		{
+			if (_input.scroll)
+			{
+				PlayerManager player = GetComponent<PlayerManager>();
+
+				if (player != null)
+				{
+					player.SetNewFocusIndex();
+				}
+			}
+
+			_input.scroll = false;
 		}
 	}
 }
