@@ -20,7 +20,6 @@ namespace StarterAssets
 		private int currentHealth;
 		public HealthBar healthBar;
 		
-
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
 		public float MoveSpeed = 2.0f;
@@ -134,6 +133,9 @@ namespace StarterAssets
 			Move();
 
 			ScrollInventory();
+
+			UseInventoryItem();
+			DropInventoryItem();
 		}
 
 		private void LateUpdate()
@@ -367,6 +369,26 @@ namespace StarterAssets
 			}
 
 			_input.scroll = false;
+		}
+
+		private void UseInventoryItem()
+        {
+			if (_input.use)
+            {
+				GetComponent<PlayerManager>().UseItem();
+			}
+
+			_input.use = false;
+        }
+
+		private void DropInventoryItem()
+		{
+			if (_input.drop)
+			{
+				GetComponent<PlayerManager>().DropItem();
+			}
+
+			_input.drop = false;
 		}
 	}
 }

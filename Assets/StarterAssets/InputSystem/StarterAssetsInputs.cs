@@ -13,6 +13,8 @@ namespace StarterAssets
         public bool jump;
         public bool sprint;
         public bool scroll;
+        public bool use;
+        public bool drop;
 
         [Header("Movement Settings")]
         public bool analogMovement;
@@ -51,6 +53,16 @@ namespace StarterAssets
         {
             ScrollInput(value.isPressed);
         }
+
+        public void OnUse(InputValue value)
+        {
+            UseInput(value.isPressed);
+        }
+
+        public void OnDrop(InputValue value)
+        {
+            DropInput(value.isPressed);
+        }
 #else
  // old input sys if we do decide to have it (most likely wont)... 
 #endif
@@ -79,6 +91,16 @@ namespace StarterAssets
         public void ScrollInput(bool newScrollState)
         {
             scroll = newScrollState;
+        }
+
+        public void UseInput(bool newState)
+        {
+            use = newState;
+        }
+
+        public void DropInput(bool newState)
+        {
+            drop = newState;
         }
 
 #if !UNITY_IOS || !UNITY_ANDROID

@@ -8,8 +8,10 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     private Inventory inventory;
+
     [SerializeField] private GameObject inventoryParent;
     [SerializeField] private ItemSpawnManager itemSpawnManager;
+    [SerializeField] public HealthBar healthBar;
 
     private void Awake()
     {
@@ -18,6 +20,19 @@ public class PlayerManager : MonoBehaviour
             "InventoryItemSlot");
 
         inventory = new Inventory(objects);
+
+        inventory.OnUseItem += OnUseItem;
+        inventory.OnDropItem += OnDropItem;
+    }
+
+    private void OnUseItem(object sender, System.EventArgs e)
+    {
+        
+    }
+
+    private void OnDropItem(object sender, System.EventArgs e)
+    {
+
     }
 
     public static List<GameObject> FindGameObjectInChildWithTag(GameObject parent, string tag)
@@ -48,6 +63,16 @@ public class PlayerManager : MonoBehaviour
 
     public void SetNewFocusIndex()
     {
-        inventory.setNewFocusIndex();
+        inventory.SetNewFocusIndex();
+    }
+
+    public void UseItem()
+    {
+        inventory.UseItem();
+    }
+
+    public void DropItem()
+    {
+        inventory.DropItem();
     }
 }

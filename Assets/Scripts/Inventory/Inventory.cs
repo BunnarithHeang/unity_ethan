@@ -7,6 +7,9 @@ using UnityEngine.UI;
 [Serializable]
 public class Inventory : MonoBehaviour
 {
+    public event EventHandler OnUseItem;
+    public event EventHandler OnDropItem;
+
     public List<InventoryItem> items { get; private set; }
 
     public List<GameObject> itemObjects { get; private set; }
@@ -81,7 +84,7 @@ public class Inventory : MonoBehaviour
         SetNewFocusUI();
     }
 
-    public void setNewFocusIndex()
+    public void SetNewFocusIndex()
     {
         selectedIndex++;
 
@@ -100,13 +103,13 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < itemObjects.Count; ++i)
         {
-            SetTextToUnselected(
+            ChangeTextLabelStatus(
                 i,
                 itemObjects[i].activeSelf && i == selectedIndex);
         }
     }
 
-    private void SetTextToUnselected(int index, bool active)
+    private void ChangeTextLabelStatus(int index, bool active)
     {
         GameObject itemButton = itemObjects[index].transform.GetChild(0).gameObject;
         GameObject amountTextUI = itemButton.transform.GetChild(1).gameObject;
@@ -117,11 +120,24 @@ public class Inventory : MonoBehaviour
 
     public void UseItem()
     {
+        OnUseItem(items[selectedIndex].type, EventArgs.Empty);
         
+        //switch (item.type)
+        //{
+        //    case InventoryItem.ItemType.Health:
+        //    case InventoryItem.ItemType.Meat1:
+        //    case InventoryItem.ItemType.Meat2:
+        //    case InventoryItem.ItemType.Sword:
+        //        OnUseItem(item.type, EventArgs.Empty);
+        //        break;
+        //    default:
+        //        break;
+        //}
     }
 
     public void DropItem()
     {
+        OnDropItem(items[selectedIndex].type, EventArgs.Empty); 
         // When remove check the reorder in list make sure that all are in the correct order
     }
 }
