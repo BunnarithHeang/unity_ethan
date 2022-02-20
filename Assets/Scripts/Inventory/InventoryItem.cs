@@ -9,7 +9,7 @@ public class InventoryItem
         Health, Sword, Meat1, Meat2
     }
 
-    private static Dictionary<string, ItemType> itemsTypes = new Dictionary<string, ItemType>() {
+    public static Dictionary<string, ItemType> itemsTypes = new Dictionary<string, ItemType>() {
         { "ItemPotionHealth", ItemType.Health },
         { "ItemMeat" , ItemType.Meat1 },
         { "ItemSword", ItemType.Sword },

@@ -9,9 +9,11 @@ public class PlayerManager : MonoBehaviour
 {
     private Inventory inventory;
 
+    [SerializeField] private GameObject player;
     [SerializeField] private GameObject inventoryParent;
     [SerializeField] private ItemSpawnManager itemSpawnManager;
-    [SerializeField] public HealthBar healthBar;
+    [SerializeField] private HealthBar healthBar;
+    [SerializeField] private List<GameObject> spawningItems;
 
     private void Awake()
     {
@@ -38,15 +40,26 @@ public class PlayerManager : MonoBehaviour
                 case InventoryItem.ItemType.Meat2:
                     healthBar.IncreaseHealth(10);
                     break;
-                default:
-                    break;
             }
         }
     }
 
     private void OnDropItem(object sender, System.EventArgs e)
     {
+        if (sender is InventoryItem)
+        {
+            InventoryItem.ItemType type = (sender as InventoryItem).type;
 
+            int index = spawningItems.FindIndex(
+                item => item.tag == InventoryItem.TagFromType(type));
+
+            Vector3 position = player.transform.position + new Vector3(3, 0, 0);
+
+            Instantiate(
+                spawningItems[index],
+                new Vector3(position.x, 0.7f, position.z),
+                spawningItems[index].transform.rotation);
+        }
     }
 
     public static List<GameObject> FindGameObjectInChildWithTag(GameObject parent, string tag)
