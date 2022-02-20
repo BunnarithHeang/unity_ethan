@@ -15,7 +15,6 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private HealthBar healthBar;
     [SerializeField] private List<GameObject> spawningItems;
     [SerializeField] private GameObject weapon;
-    private bool isWeapon = false;
 
     private void Awake()
     {
@@ -86,9 +85,9 @@ public class PlayerManager : MonoBehaviour
         if (InventoryItem.IsInventoryItem(other.tag))
         {
             inventory.AddItemBy(other.tag);
-            isWeapon = inventory.IsWeapon();
-            print(isWeapon);
-            weapon.SetActive(isWeapon);
+            
+            weapon.SetActive(inventory.IsWeapon());
+
             Destroy(other.gameObject);
         }
     }
@@ -97,19 +96,18 @@ public class PlayerManager : MonoBehaviour
     {
         inventory.SetNewFocusIndex();
 
-        isWeapon = inventory.IsWeapon();
-        // check here for sword holding
-        weapon.SetActive(isWeapon);
+        weapon.SetActive(inventory.IsWeapon());
     }
 
     public void UseItem()
     {
         inventory.UseItem();
-        
+        weapon.SetActive(inventory.IsWeapon());
     }
 
     public void DropItem()
     {
         inventory.DropItem();
+        weapon.SetActive(inventory.IsWeapon());
     }
 }

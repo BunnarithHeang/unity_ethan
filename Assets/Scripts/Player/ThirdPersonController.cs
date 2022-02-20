@@ -401,8 +401,6 @@ namespace StarterAssets
         {
 			if (_input.attack)
             {
-				Debug.Log("Attack");
-				// Trigger attack here
 				_animator.SetTrigger("isAttacking");
 			}
 

@@ -113,16 +113,13 @@ public class Inventory : MonoBehaviour
 
             if (items[selectedIndex].item.amount <= 0) 
                 items[selectedIndex].SetEmpty();
-        }
-        else
-        {
-            items[selectedIndex].SetEmpty();
+
+            if (selectedIndex > 0 && items[selectedIndex].item == null)
+                selectedIndex--;
+
+            SetNewFocusUI();
         }
 
-        if (selectedIndex > 0 && items[selectedIndex].item == null)
-            selectedIndex--;
-
-        SetNewFocusUI();
     }
 
     public void DropItem()
