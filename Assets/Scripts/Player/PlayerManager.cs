@@ -27,7 +27,21 @@ public class PlayerManager : MonoBehaviour
 
     private void OnUseItem(object sender, System.EventArgs e)
     {
-        
+        if (sender is InventoryItem)
+        {
+            switch ((sender as InventoryItem).type)
+            {
+                case InventoryItem.ItemType.Health:
+                    healthBar.IncreaseHealth(15);
+                    break;
+                case InventoryItem.ItemType.Meat1:
+                case InventoryItem.ItemType.Meat2:
+                    healthBar.IncreaseHealth(10);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private void OnDropItem(object sender, System.EventArgs e)
@@ -53,7 +67,6 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Filters for only inventory items
         if (InventoryItem.IsInventoryItem(other.tag))
         {
             inventory.AddItemBy(other.tag);

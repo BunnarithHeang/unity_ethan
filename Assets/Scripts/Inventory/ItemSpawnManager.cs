@@ -10,7 +10,7 @@ public class ItemSpawnManager : MonoBehaviour
 
     public List<InventoryItem> inventoryItemObjects { get; private set; }
 
-    private float spawnTime = 100.0f;
+    private float spawnTime = 25.0f;
     private float radius = 1.0f;
 
     private void Awake()
@@ -27,14 +27,9 @@ public class ItemSpawnManager : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating("SpawnRandomItems", spawnTime, 30.0f);
-       
-        SpawnWeapons();
+        InvokeRepeating("SpawnRandomItems", 5.0f, spawnTime);
 
-        for (int i = 0; i < 5; ++i)
-        {
-            SpawnRandomItems();
-        }
+        SpawnWeapons();
     }
 
     private InventoryItem.ItemType GetTypeFromTag(string tag)
