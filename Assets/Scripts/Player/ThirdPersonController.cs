@@ -136,6 +136,8 @@ namespace StarterAssets
 
 			UseInventoryItem();
 			DropInventoryItem();
+
+			CheckAttack();
 		}
 
 		private void LateUpdate()
@@ -403,5 +405,16 @@ namespace StarterAssets
 
 			_input.drop = false;
 		}
+
+		private void CheckAttack()
+        {
+			if (_input.attack)
+            {
+				Debug.Log("Attack");
+				// Trigger attack here
+            }
+
+            _input.attack = false;
+        }
 	}
 }
