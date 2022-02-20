@@ -79,10 +79,6 @@ namespace StarterAssets
             move = newMoveDirection;
         }
 
-        public void AttackInput(bool attackState)
-        {
-            attack = attackState;
-        }
 
         public void LookInput(Vector2 newLookDirection)
         {

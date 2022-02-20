@@ -197,17 +197,8 @@ namespace StarterAssets
 
 			// note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
 			// if there is no input, set the target speed to 0
-			if (_input.move == Vector2.zero)
-			{
-				targetSpeed = 0.0f;
+			if (_input.move == Vector2.zero) targetSpeed = 0.0f;
 				
-
-				if (_hasAnimator)
-				{
-					_animator.SetTrigger("isAttacking");
-					
-				}
-			}
 			else
             {
 				_input.attack = false;
@@ -412,7 +403,8 @@ namespace StarterAssets
             {
 				Debug.Log("Attack");
 				// Trigger attack here
-            }
+				_animator.SetTrigger("isAttacking");
+			}
 
             _input.attack = false;
         }
