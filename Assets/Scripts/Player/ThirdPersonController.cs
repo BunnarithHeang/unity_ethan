@@ -258,12 +258,11 @@ namespace StarterAssets
 		{
 			if (other.gameObject.tag == "Enemy")
 			{
-				TakeDamage(50);
+				TakeDamage(20);
 			}
 			if (currentHealth <= 0)
             {
 				_animator.SetTrigger("Death");
-
 			}
 		}
 

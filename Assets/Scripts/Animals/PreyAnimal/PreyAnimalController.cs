@@ -16,8 +16,6 @@ public class PreyAnimalController : MonoBehaviour
     public GameObject meatPrefab;
     //create HealthBarz object
     public HealthBarSpaceWorld healthbar;
-    [SerializeField] private SpawnManager spawnManager;
-
 
     private void Start()
     {
