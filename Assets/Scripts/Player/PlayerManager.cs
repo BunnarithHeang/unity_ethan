@@ -105,6 +105,7 @@ public class PlayerManager : MonoBehaviour
     public void UseItem()
     {
         inventory.UseItem();
+        
     }
 
     public void DropItem()

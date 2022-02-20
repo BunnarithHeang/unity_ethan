@@ -15,6 +15,7 @@ namespace StarterAssets
         public bool scroll;
         public bool use;
         public bool drop;
+        public bool attack;
 
         [Header("Movement Settings")]
         public bool analogMovement;
@@ -71,6 +72,11 @@ namespace StarterAssets
         public void MoveInput(Vector2 newMoveDirection)
         {
             move = newMoveDirection;
+        }
+
+        public void AttackInput(bool attackState)
+        {
+            attack = attackState;
         }
 
         public void LookInput(Vector2 newLookDirection)

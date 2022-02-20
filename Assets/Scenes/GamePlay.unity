@@ -17926,6 +17926,7 @@ MonoBehaviour:
   scroll: 0
   use: 0
   drop: 0
+  attack: 0
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
