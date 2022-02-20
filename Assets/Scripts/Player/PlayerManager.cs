@@ -14,6 +14,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private ItemSpawnManager itemSpawnManager;
     [SerializeField] private HealthBar healthBar;
     [SerializeField] private List<GameObject> spawningItems;
+    private bool isWeapon = false;
 
     private void Awake()
     {
@@ -90,6 +91,9 @@ public class PlayerManager : MonoBehaviour
     public void SetNewFocusIndex()
     {
         inventory.SetNewFocusIndex();
+
+        isWeapon = inventory.IsWeapon();
+        // check here for sword holding
     }
 
     public void UseItem()
