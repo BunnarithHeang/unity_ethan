@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,75 +11,51 @@ public class Inventory : MonoBehaviour
     public event EventHandler OnUseItem;
     public event EventHandler OnDropItem;
 
-    public List<InventoryItem> items { get; private set; }
-
-    public List<GameObject> itemObjects { get; private set; }
+    public List<InventoryItemUI> items { get; private set; } 
 
     private Color selectedColorCode = new Color(14, 255, 0, 255);
     private Color unselectedColorCode = new Color(255, 255, 255, 255);
     private int selectedIndex = 0;
 
+    public bool IsWeapon()
+    {
+        return items[selectedIndex].item?.type == InventoryItem.ItemType.Sword;
+    }
+
     public Inventory(List<GameObject> objects)
     {
-        itemObjects = objects ?? new List<GameObject>();
+        items = new List<InventoryItemUI>();
 
-        items = new List<InventoryItem>();
+        for (int i = 0; i < objects.Count; ++i)
+        {
+            items.Add(new InventoryItemUI(null, objects[i]));
+        }
     }
 
     public void AddItemBy(string tag)
     {
         // Find if inventory currently have item with the same tag
         int index = items.FindIndex(
-            item => InventoryItem.TagFromType(item.type) == tag);
+            item => InventoryItem.TagFromType(item.item?.type) == tag);
 
         // If in inventory && stackable, just increament the amount
-        if (index > -1 && items[index].IsStackable())
+        if (index > -1 && items[index].item.IsStackable())
         {
-            items[index].ModifyAmount(1);
+            items[index].item.ModifyAmount(1);
 
-            // Get the slot
-            GameObject inventorySlot = itemObjects[index];
-
-            // Get the button children
-            GameObject itemButton = inventorySlot.transform.GetChild(0).gameObject;
-
-            // Amount child
-            GameObject amountTextUI = itemButton.transform.GetChild(1).gameObject;
-
-            amountTextUI.GetComponent<TextMeshProUGUI>().SetText(items[index].amount.ToString());
-            amountTextUI.SetActive(true);
-
-            // Set active
-            inventorySlot.SetActive(true);
+            UpdateItemSlotUI(index);
         }
         else // Add to new slot if not in inventory or not stackable
         {
-            InventoryItem newItem = new InventoryItem(InventoryItem.TypeFromTag(tag));
-            items.Add(newItem);
+            if (index == -1)
+            {
+                int lastIndex = items.FindIndex(item => !item.gameObject.activeSelf);
 
-            // Find the last active index
-            int lastIndex = itemObjects.FindIndex(item => !item.activeSelf);
+                items[lastIndex].item = new InventoryItem(InventoryItem.TypeFromTag(tag));
 
-            // Get the slot
-            GameObject inventorySlot = itemObjects[lastIndex];
-
-            // Get the button children
-            GameObject itemButton = inventorySlot.transform.GetChild(0).gameObject;
-
-            // Get the image child
-            GameObject imageUI = itemButton.transform.GetChild(0).gameObject;
-
-            // Amount child
-            GameObject amountTextUI = itemButton.transform.GetChild(1).gameObject;
-            amountTextUI.GetComponent<TextMeshProUGUI>().SetText(newItem.amount.ToString());
-            amountTextUI.SetActive(true);
-
-            // Get the image component, set to new sprite
-            Image imageComponent = imageUI.GetComponent("Image") as Image;
-            imageComponent.sprite = newItem.GetSprite();
-
-            // Set active
-            inventorySlot.SetActive(true);
+                UpdateItemSlotUI(lastIndex);
+            }
+            else return;
         }
 
         SetNewFocusUI();
@@ -86,32 +63,36 @@ public class Inventory : MonoBehaviour
 
     public void SetNewFocusIndex()
     {
-        selectedIndex++;
-
         int cnt = 0;
-        for (int i = 0; i < itemObjects.Count; ++i) {
-            if (itemObjects[i].activeSelf)
+        for (int i = 0; i < items.Count; ++i) {
+            if (items[i].gameObject.activeSelf)
                 cnt += 1;
         }
 
-        selectedIndex %= cnt;
+        if (cnt > 0)
+        {
+            selectedIndex++;
+            selectedIndex %= cnt;
 
-        SetNewFocusUI();
+            SetNewFocusUI();
+        }
     }
 
     private void SetNewFocusUI()
     {
-        for (int i = 0; i < itemObjects.Count; ++i)
+        items = items.OrderBy(x => !x.gameObject.activeSelf).ToList();
+
+        for (int i = 0; i < items.Count; ++i)
         {
             ChangeTextLabelStatus(
                 i,
-                itemObjects[i].activeSelf && i == selectedIndex);
+                items[i].gameObject.activeSelf && i == selectedIndex);
         }
     }
 
     private void ChangeTextLabelStatus(int index, bool active)
     {
-        GameObject itemButton = itemObjects[index].transform.GetChild(0).gameObject;
+        GameObject itemButton = items[index].gameObject.transform.GetChild(0).gameObject;
         GameObject amountTextUI = itemButton.transform.GetChild(1).gameObject;
 
         amountTextUI.GetComponent<TextMeshProUGUI>().color = active ? selectedColorCode : unselectedColorCode;
@@ -120,47 +101,80 @@ public class Inventory : MonoBehaviour
 
     public void UseItem()
     {
-        if (items.Count > 0)
+        if (items[selectedIndex].item == null) return;
+
+        OnUseItem(items[selectedIndex].item, EventArgs.Empty);
+
+        if (items[selectedIndex].item.IsStackable())
         {
-            OnUseItem(items[selectedIndex], EventArgs.Empty);
+            items[selectedIndex].item.ModifyAmount(-1);
 
-            items[selectedIndex].ModifyAmount(-1);
+            UpdateItemSlotUI(selectedIndex);
 
-            if (items[selectedIndex].amount <= 0) {
-                items.RemoveAt(selectedIndex);
-                itemObjects[selectedIndex].SetActive(false);
-            }
+            if (items[selectedIndex].item.amount <= 0) 
+                items[selectedIndex].SetEmpty();
         }
+        else
+        {
+            items[selectedIndex].SetEmpty();
+        }
+
+        if (selectedIndex > 0 && items[selectedIndex].item == null)
+            selectedIndex--;
+
+        SetNewFocusUI();
     }
 
     public void DropItem()
     {
-        if (items.Count > 0)
+        if (items[selectedIndex].item == null) return;
+
+        // Animate drop animation
+        OnDropItem(items[selectedIndex].item, EventArgs.Empty);
+
+        if (items[selectedIndex].item.IsStackable())
         {
-            OnDropItem(items[selectedIndex], EventArgs.Empty);
+            items[selectedIndex].item.ModifyAmount(-1);
 
-            if (items[selectedIndex].IsStackable())
-            {
-                items[selectedIndex].ModifyAmount(-1);
+            UpdateItemSlotUI(selectedIndex);
 
-                if (items[selectedIndex].amount <= 0)
-                {
-                    items.RemoveAt(selectedIndex);
-                    itemObjects[selectedIndex].SetActive(false);
-                }
-            }
-            else
-            {
-                Debug.Log(selectedIndex);
-                Debug.Log(items.Count);
-                //items.RemoveAt(selectedIndex);
-                //if (selectedIndex > 0)
-                //{
-                //    selectedIndex--;
-                //    SetNewFocusUI();
-                //}
-            }
-            // When remove check the reorder in list make sure that all are in the correct order
+            if (items[selectedIndex].item.amount <= 0)
+                items[selectedIndex].SetEmpty();
         }
+        else
+        {
+            items[selectedIndex].SetEmpty();
+        }
+        
+
+        if (selectedIndex > 0 && items[selectedIndex].item == null)
+            selectedIndex--;
+
+        SetNewFocusUI();
+    }
+
+    private void UpdateItemSlotUI(int index)
+    {
+        // Get the slot
+        GameObject inventorySlot = items[index].gameObject;
+
+        // Get the button children
+        GameObject itemButton = inventorySlot.transform.GetChild(0).gameObject;
+
+        // Get the image child
+        GameObject imageUI = itemButton.transform.GetChild(0).gameObject;
+
+        // Get the image component, set to new sprite
+        Image imageComponent = imageUI.GetComponent("Image") as Image;
+        imageComponent.sprite = items[index].item.GetSprite();
+
+        // Amount child
+        GameObject amountTextUI = itemButton.transform.GetChild(1).gameObject;
+        amountTextUI.GetComponent<TextMeshProUGUI>().SetText(
+            items[index].item.amount.ToString());
+        amountTextUI.SetActive(true);
+
+        // Set active
+        inventorySlot.SetActive(true);
     }
 }

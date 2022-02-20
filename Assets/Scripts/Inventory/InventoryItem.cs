@@ -9,9 +9,9 @@ public class InventoryItem
         Health, Sword, Meat1, Meat2
     }
 
-    private static Dictionary<string, ItemType> itemsTypes = new Dictionary<string, ItemType>() {
+    public static Dictionary<string, ItemType> itemsTypes = new Dictionary<string, ItemType>() {
         { "ItemPotionHealth", ItemType.Health },
-        {"ItemMeat" , ItemType.Meat1},
+        { "ItemMeat" , ItemType.Meat1 },
         { "ItemSword", ItemType.Sword },
     };
 
@@ -29,9 +29,11 @@ public class InventoryItem
         this.amount += amount;
     }
 
-    static public string TagFromType(ItemType type)
+    static public string TagFromType(ItemType? type)
     {
-        return itemsTypes.First(e => e.Value == type).Key;
+        return type != null
+            ? itemsTypes.First(e => e.Value == type).Key
+            : "";
     }
 
     static public ItemType TypeFromTag(string tag)
@@ -68,5 +70,23 @@ public class InventoryItem
     public static bool IsInventoryItem(string tag)
     {
         return itemsTypes.Keys.ToList().Contains(tag);
+    }
+}
+
+public class InventoryItemUI
+{
+    public InventoryItem item;
+    public GameObject gameObject;
+
+    public InventoryItemUI(InventoryItem item, GameObject gameObject)
+    {
+        this.item = item;
+        this.gameObject = gameObject;
+    }
+
+    public void SetEmpty()
+    {
+        item = null;
+        gameObject?.SetActive(false);
     }
 }

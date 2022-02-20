@@ -9,9 +9,12 @@ public class PlayerManager : MonoBehaviour
 {
     private Inventory inventory;
 
+    [SerializeField] private GameObject player;
     [SerializeField] private GameObject inventoryParent;
     [SerializeField] private ItemSpawnManager itemSpawnManager;
-    [SerializeField] public HealthBar healthBar;
+    [SerializeField] private HealthBar healthBar;
+    [SerializeField] private List<GameObject> spawningItems;
+    private bool isWeapon = false;
 
     private void Awake()
     {
@@ -27,12 +30,37 @@ public class PlayerManager : MonoBehaviour
 
     private void OnUseItem(object sender, System.EventArgs e)
     {
-        
+        if (sender is InventoryItem)
+        {
+            switch ((sender as InventoryItem).type)
+            {
+                case InventoryItem.ItemType.Health:
+                    healthBar.IncreaseHealth(15);
+                    break;
+                case InventoryItem.ItemType.Meat1:
+                case InventoryItem.ItemType.Meat2:
+                    healthBar.IncreaseHealth(10);
+                    break;
+            }
+        }
     }
 
     private void OnDropItem(object sender, System.EventArgs e)
     {
+        if (sender is InventoryItem)
+        {
+            InventoryItem.ItemType type = (sender as InventoryItem).type;
 
+            int index = spawningItems.FindIndex(
+                item => item.tag == InventoryItem.TagFromType(type));
+
+            Vector3 position = player.transform.position + new Vector3(3, 0, 0);
+
+            Instantiate(
+                spawningItems[index],
+                new Vector3(position.x, 0.7f, position.z),
+                spawningItems[index].transform.rotation);
+        }
     }
 
     public static List<GameObject> FindGameObjectInChildWithTag(GameObject parent, string tag)
@@ -53,7 +81,6 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Filters for only inventory items
         if (InventoryItem.IsInventoryItem(other.tag))
         {
             inventory.AddItemBy(other.tag);
@@ -64,6 +91,9 @@ public class PlayerManager : MonoBehaviour
     public void SetNewFocusIndex()
     {
         inventory.SetNewFocusIndex();
+
+        isWeapon = inventory.IsWeapon();
+        // check here for sword holding
     }
 
     public void UseItem()

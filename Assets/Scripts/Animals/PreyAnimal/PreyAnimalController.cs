@@ -113,7 +113,6 @@ public class PreyAnimalController : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         Destroy(gameObject);
-        
 
         Instantiate(meatPrefab, gameObject.transform.position, Quaternion.identity);
     }

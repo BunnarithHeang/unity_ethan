@@ -8,20 +8,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-    private GameObject startButton;
-    private GameObject quitButton;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        startButton = GameObject.FindGameObjectWithTag("StartGameButton");
-        quitButton = GameObject.FindGameObjectWithTag("QuitGameButton");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
+    [SerializeField] private GameObject startButton;
+    [SerializeField] private GameObject quitButton;
 
     public void SetClick()
     {
