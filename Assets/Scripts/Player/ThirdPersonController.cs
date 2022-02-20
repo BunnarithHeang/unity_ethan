@@ -262,7 +262,7 @@ namespace StarterAssets
 			}
 			if (currentHealth <= 0)
             {
-				_animator.SetBool(_animDead, true);
+				_animator.SetTrigger("Death");
 
 			}
 		}
