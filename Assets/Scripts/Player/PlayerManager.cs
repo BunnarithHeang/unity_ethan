@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using StarterAssets;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
-    private Inventory inventory;
+    public Inventory inventory { get; private set; }
 
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject inventoryParent;

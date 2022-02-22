@@ -16,6 +16,7 @@ namespace StarterAssets
         public bool use;
         public bool drop;
         public bool attack;
+        public bool restart;
 
         [Header("Movement Settings")]
         public bool analogMovement;
@@ -69,6 +70,11 @@ namespace StarterAssets
         {
             AttackInput(value.isPressed);
         }
+
+        public void OnRestart(InputValue value)
+        {
+            RestartInput(value.isPressed);
+        }
 #else
  // old input sys if we do decide to have it (most likely wont)... 
 #endif
@@ -113,6 +119,11 @@ namespace StarterAssets
         public void AttackInput(bool newState)
         {
             attack = newState;
+        }
+
+        public void RestartInput(bool newState)
+        {
+            restart = newState;
         }
 
 #if !UNITY_IOS || !UNITY_ANDROID

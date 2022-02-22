@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject startButton;
     [SerializeField] private GameObject quitButton;
+    [SerializeField] private Button startOverButton;
 
     public void SetClick()
     {
@@ -22,8 +23,21 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("GamePlay");
     }
 
+    private void Awake()
+    {
+        if (startOverButton != null)
+        {
+            startOverButton.onClick.AddListener(StartOver);
+        }       
+    }
+
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void StartOver()
+    {
+        SceneManager.LoadScene("Intro");
     }
 }

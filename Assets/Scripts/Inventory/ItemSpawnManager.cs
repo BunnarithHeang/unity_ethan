@@ -10,7 +10,7 @@ public class ItemSpawnManager : MonoBehaviour
 
     public List<InventoryItem> inventoryItemObjects { get; private set; }
 
-    private float spawnTime = 25.0f;
+    private float spawnTime = 10.0f;
     private float radius = 1.0f;
 
     private void Awake()

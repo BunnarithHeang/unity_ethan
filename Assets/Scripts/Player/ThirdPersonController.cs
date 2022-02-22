@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 #endif
 
@@ -19,7 +20,10 @@ namespace StarterAssets
 		private int MaxHealth = 100;
 		private int currentHealth;
 		public HealthBar healthBar;
-		
+		static public bool isDead = false;
+		[SerializeField] private GameObject inventoryBox;
+		[SerializeField] private GameObject gameOver;
+
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
 		public float MoveSpeed = 2.0f;
@@ -126,18 +130,24 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			_hasAnimator = TryGetComponent(out _animator);
+			if (!isDead)
+            {
+				_hasAnimator = TryGetComponent(out _animator);
 
-			JumpAndGravity();
-			GroundedCheck();
-			Move();
+				JumpAndGravity();
+				GroundedCheck();
+				Move();
 
-			ScrollInventory();
+				ScrollInventory();
 
-			UseInventoryItem();
-			DropInventoryItem();
+				UseInventoryItem();
+				DropInventoryItem();
 
-			CheckAttack();
+				CheckAttack();
+            } else
+            {
+				CheckRestart();
+            }
 		}
 
 		private void LateUpdate()
@@ -267,9 +277,14 @@ namespace StarterAssets
 			{
 				TakeDamage(20);
 			}
+
 			if (currentHealth <= 0)
             {
 				_animator.SetTrigger("Death");
+				isDead = true;
+
+				gameOver.SetActive(true);
+				inventoryBox.SetActive(false);
 			}
 		}
 
@@ -399,12 +414,23 @@ namespace StarterAssets
 
 		private void CheckAttack()
         {
+			
 			if (_input.attack)
             {
+				if (Inventory.isWeapon)
 				_animator.SetTrigger("isAttacking");
 			}
 
             _input.attack = false;
         }
+
+		private void CheckRestart() {
+			if (_input.restart)
+            {
+				isDead = false;
+				SceneManager.LoadScene("Intro");
+			}
+			_input.restart = false;
+		}
 	}
 }

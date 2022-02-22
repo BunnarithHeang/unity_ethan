@@ -17,9 +17,13 @@ public class Inventory : MonoBehaviour
     private Color unselectedColorCode = new Color(255, 255, 255, 255);
     private int selectedIndex = 0;
 
+    static public bool isWeapon = false;
+
     public bool IsWeapon()
     {
-        return items[selectedIndex].item?.type == InventoryItem.ItemType.Sword;
+        isWeapon = items[selectedIndex].item?.type == InventoryItem.ItemType.Sword;
+
+        return isWeapon;
     }
 
     public Inventory(List<GameObject> objects)
